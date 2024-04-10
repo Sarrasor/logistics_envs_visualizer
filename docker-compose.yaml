@@ -1,0 +1,18 @@
+services:
+  logviz_frontend:
+    image: node:lts
+    container_name: logviz_frontend
+    working_dir: /var/www/html/app/
+    # entrypoint: /bin/bash
+    ports:
+      - 8080:8080
+    volumes:
+      - "./frontend/:/var/www/html/app"
+    command: ["npm", "run", "dev"]
+    # tty: true
+  logviz_backend:
+    build:
+      dockerfile: Dockerfile
+    container_name: "logviz_backend"
+    ports:
+      - 8000:8000
