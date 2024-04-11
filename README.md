@@ -1,6 +1,6 @@
-# Logistics Envs Visualizer
+# Logviz
 
-Web-based visualizer for logistics environments
+Web-based visualizer for [logistics environments](https://github.com/Sarrasor/logistics_envs)
 
 ![Logviz web interface](images/logviz.png)
 
