@@ -43,8 +43,9 @@ function getOrderColorByStatus(order) {
 function orderPopup(order: Object) {
     return "<h1><b>Order</b></h1><br>" +
         `<b>Id:</b> ${order.id}<br>` +
-        `<b>From Location:</b> ${order.from_location.lat}, ${order.from_location.lon}</br>` +
-        `<b>To Location:</b> ${order.to_location.lat}, ${order.to_location.lon}</br>`
+        `<b>From Location:</b> ${order.from_location.lat.toFixed(6)}, ${order.from_location.lon.toFixed(6)}</br>` +
+        `<b>To Location:</b> ${order.to_location.lat.toFixed(6)}, ${order.to_location.lon.toFixed(6)}</br>` +
+        `<b>Status:</b> ${order.status}<br>`
 }
 
 </script>
