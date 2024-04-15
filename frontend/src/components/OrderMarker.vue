@@ -23,7 +23,7 @@ defineProps({
 })
 
 function getOrderLocationByStatus(order) {
-    if (order.status == "CREATED" || order.status == "IN_PICKUP") {
+    if (order.status == "CREATED" || order.status == "ASSIGNED" || order.status == "IN_PICKUP") {
         return locationToList(order.from_location)
     }
     else {
@@ -32,7 +32,7 @@ function getOrderLocationByStatus(order) {
 }
 
 function getOrderColorByStatus(order) {
-    if (order.status == "CREATED" || order.status == "IN_PICKUP") {
+    if (order.status == "CREATED" || order.status == "ASSIGNED" || order.status == "IN_PICKUP") {
         return "#0000ff"
     }
     else {

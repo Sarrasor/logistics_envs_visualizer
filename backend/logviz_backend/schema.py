@@ -46,6 +46,7 @@ class WorkerObservation(BaseModel):
 
 class OrderStatus(str, Enum):
     CREATED = "CREATED"
+    ASSIGNED = "ASSIGNED"
     IN_PICKUP = "IN_PICKUP"
     IN_DELIVERY = "IN_DELIVERY"
     IN_DROP_OFF = "IN_DROP_OFF"
