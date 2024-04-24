@@ -75,10 +75,16 @@ class Observation(BaseModel):
     orders: list[OrderObservation]
 
 
+class Metric(BaseModel):
+    name: str
+    value: str
+
+
 class Info(BaseModel):
     simulation_id: str
     start_time: int
     end_time: int
+    metrics: list[Metric]
 
 
 class RenderRequest(BaseModel):

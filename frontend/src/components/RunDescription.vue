@@ -9,6 +9,10 @@
             <dt class="mb-1 text-gray-500 ">Time</dt>
             <dd class="font-semibold">{{ frameData.observation.current_time }}/{{ frameData.info.end_time }}</dd>
         </div>
+        <div class="flex flex-col py-1" v-for="metric in frameData.info.metrics" :key="metric.name">
+            <dt class="mb-1 text-gray-500 ">{{ metric.name }}</dt>
+            <dd class="font-semibold">{{ metric.value }}</dd>
+        </div>
     </dl>
 </template>
 
