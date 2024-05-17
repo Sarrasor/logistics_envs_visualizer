@@ -77,7 +77,8 @@ class Observation(BaseModel):
 
 class Metric(BaseModel):
     name: str
-    value: str
+    value: float
+    unit: str
 
 
 class Info(BaseModel):
@@ -99,3 +100,39 @@ class RenderStatus(str, Enum):
 
 class RenderResponse(BaseModel):
     status: RenderStatus
+
+
+class RunStatus(str, Enum):
+    CREATED = "CREATED"
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+    ERROR = "ERROR"
+
+
+class SolveResponse(BaseModel):
+    status: RunStatus
+    message: str
+    run_id: str
+
+
+class RunThumbnail(BaseModel):
+    id: str
+    name: str
+    creation_time: str
+    status: RunStatus
+    message: str
+
+
+class RunDescription(BaseModel):
+    name: str
+    creation_time: str
+    status: RunStatus
+    message: str
+    logistics_environment: str
+    location_mode: str
+
+
+class RunReport(BaseModel):
+    id: str
+    description: RunDescription
+    metrics: list[Metric]

@@ -5,7 +5,7 @@ services:
     working_dir: /var/www/html/app/
     # entrypoint: /bin/bash
     ports:
-      - 8080:8080
+      - "8080:8080"
     volumes:
       - "./frontend/:/var/www/html/app"
     command: ["npm", "run", "dev"]
@@ -14,5 +14,7 @@ services:
     build:
       dockerfile: Dockerfile
     container_name: "logviz_backend"
+    volumes:
+      - "./backend/server_data:/app/server_data"
     ports:
-      - 8000:8000
+      - "8000:8000"

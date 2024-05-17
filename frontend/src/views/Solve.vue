@@ -12,7 +12,7 @@
             <h3 class="mt-8 text-lg font-medium text-gray-900 dark:text-white">Select logistics environment:</h3>
             <ul class="grid w-full gap-3 md:grid-cols-2">
                 <li>
-                    <input v-model="logisticsProblem" type="radio" id="logistics-problem-q-commerce"
+                    <input v-model="logisticsEnvironment" type="radio" id="logistics-problem-q-commerce"
                         name="logistics-problem" value="Q_COMMERCE" class="opacity-0 peer" required />
                     <label for="logistics-problem-q-commerce"
                         class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-500 peer-checked:text-primary-500 hover:text-gray-600 hover:bg-primary-100 hover:border-primary-300 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
@@ -23,7 +23,7 @@
                     </label>
                 </li>
                 <li>
-                    <input v-model="logisticsProblem" type="radio" id="logistics-problem-ride-hailing"
+                    <input v-model="logisticsEnvironment" type="radio" id="logistics-problem-ride-hailing"
                         name="logistics-problem" value="RIDE_HAILING" class="opacity-0 peer">
                     <label for="logistics-problem-ride-hailing"
                         class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-500 peer-checked:text-primary-500 hover:text-gray-600 hover:bg-primary-100 hover:border-primary-300 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
@@ -35,12 +35,12 @@
                 </li>
             </ul>
 
-            <h3 class="mt-8 text-lg font-medium text-gray-900 dark:text-white">Select coordinate mode:</h3>
+            <h3 class="mt-8 text-lg font-medium text-gray-900 dark:text-white">Select location mode:</h3>
             <ul class="grid w-full gap-3 md:grid-cols-2">
                 <li>
-                    <input v-model="coordinateMode" type="radio" id="coordinate-mode-cartesian" name="coordinate-mode"
+                    <input v-model="locationMode" type="radio" id="location-mode-cartesian" name="location-mode"
                         value="CARTESIAN" class="opacity-0 peer" required />
-                    <label for="coordinate-mode-cartesian"
+                    <label for="location-mode-cartesian"
                         class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-500 peer-checked:text-primary-500 hover:text-gray-600 hover:bg-primary-100 hover:border-primary-300 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
                         <div class="block">
                             <div class="w-full text-lg font-semibold">Cartesian</div>
@@ -50,14 +50,40 @@
                     </label>
                 </li>
                 <li>
-                    <input v-model="coordinateMode" type="radio" id="coordinate-mode-geographic" name="coordinate-mode"
+                    <input v-model="locationMode" type="radio" id="location-mode-geographic" name="location-mode"
                         value="GEOGRAPHIC" class="opacity-0 peer">
-                    <label for="coordinate-mode-geographic"
+                    <label for="location-mode-geographic"
                         class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-500 peer-checked:text-primary-500 hover:text-gray-600 hover:bg-primary-100 hover:border-primary-300 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
                         <div class="block">
                             <div class="w-full text-lg font-semibold">Geographic</div>
                             <div class="w-full">Locations are valid coordinates lat ∈ [-90.0, 90.0], lon ∈ [-180.0,
                                 180.0]</div>
+                        </div>
+                    </label>
+                </li>
+            </ul>
+
+            <h3 class="mt-8 text-lg font-medium text-gray-900 dark:text-white">Select run mode:</h3>
+            <ul class="grid w-full gap-3 md:grid-cols-2">
+                <li>
+                    <input v-model="runMode" type="radio" id="run-mode-live" name="run-mode" value="LIVE"
+                        class="opacity-0 peer" required />
+                    <label for="run-mode-live"
+                        class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-500 peer-checked:text-primary-500 hover:text-gray-600 hover:bg-primary-100 hover:border-primary-300 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                        <div class="block">
+                            <div class="w-full text-lg font-semibold">Live</div>
+                            <div class="w-full">Runs simulation in live mode</div>
+                        </div>
+                    </label>
+                </li>
+                <li>
+                    <input v-model="runMode" type="radio" id="run-mode-background" name="run-mode" value="BACKGROUND"
+                        class="opacity-0 peer">
+                    <label for="run-mode-background"
+                        class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-500 peer-checked:text-primary-500 hover:text-gray-600 hover:bg-primary-100 hover:border-primary-300 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                        <div class="block">
+                            <div class="w-full text-lg font-semibold">Background</div>
+                            <div class="w-full">Runs simulation in background as fast as possible</div>
                         </div>
                     </label>
                 </li>
@@ -105,8 +131,9 @@ const router = useRouter()
 const fileInput = ref(null)
 
 const runName = ref("")
-const logisticsProblem = ref("RIDE_HAILING")
-const coordinateMode = ref("GEOGRAPHIC")
+const logisticsEnvironment = ref("RIDE_HAILING")
+const locationMode = ref("GEOGRAPHIC")
+const runMode = ref("LIVE")
 const inputFile = ref(null)
 
 const sendingRequest = ref(false)
@@ -121,14 +148,15 @@ function process() {
     }
 
     var formData = new FormData()
-    formData.append("run_name", runName.value)
-    formData.append("logistics_problem", logisticsProblem.value)
-    formData.append("coordinate_mode", coordinateMode.value)
     formData.append("input_file", inputFile.value)
+    formData.append("logistics_environment", logisticsEnvironment.value)
+    formData.append("location_mode", locationMode.value)
+    formData.append("run_mode", runMode.value)
+    formData.append("run_name", runName.value)
 
     sendingRequest.value = true
 
-    axios.post('/api/process', formData, {
+    axios.post('/api/solve', formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
@@ -140,7 +168,8 @@ function process() {
             return
         }
 
-        router.push({ name: "RunReport", params: { id: response.data.run_id } })
+        // router.push({ name: "RunReport", params: { id: response.data.run_id } })
+        router.push({ name: "LiveMonitor", params: {} })
     }).catch(function () {
         requestFailure.value = true
         requestFailureMessage.value = "Failed to send the request. Maybe the server is down..."

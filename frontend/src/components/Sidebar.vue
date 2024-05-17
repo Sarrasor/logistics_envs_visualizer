@@ -1,6 +1,7 @@
 <template>
     <div class="h-full px-3 pb-5 pt-3 overflow-y-auto bg-gray-100">
-        <RunDescription :frameData="frameData"></RunDescription>
+        <LiveRunDescription :frameData="frameData">
+        </LiveRunDescription>
         <WorkerTable :workers="frameData.observation.workers"></WorkerTable>
         <OrderTable :orders="frameData.observation.orders"></OrderTable>
     </div>
@@ -10,7 +11,7 @@
 
 import WorkerTable from './WorkerTable.vue'
 import OrderTable from './OrderTable.vue'
-import RunDescription from './RunDescription.vue'
+import LiveRunDescription from './LiveRunDescription.vue'
 
 const props = defineProps({
     frameData: {
