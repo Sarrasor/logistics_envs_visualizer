@@ -132,7 +132,33 @@ class RunDescription(BaseModel):
     location_mode: str
 
 
+class OrderInfo(BaseModel):
+    id: str
+    client_id: str
+    from_location: Location
+    to_location: Location
+    creation_time: int
+    time_window: list[tuple[int, int]]
+    status: OrderStatus
+    assignment_time: Optional[int]
+    pickup_start_time: Optional[int]
+    pickup_end_time: Optional[int]
+    drop_off_start_time: Optional[int]
+    drop_off_end_time: Optional[int]
+    completion_time: Optional[int]
+    assigned_worker_id: Optional[str]
+
+
+class WorkerInfo(BaseModel):
+    id: str
+    travel_type: WorkerTravelType
+    speed: float
+    color: str
+
+
 class RunReport(BaseModel):
     id: str
     description: RunDescription
+    orders: list[OrderInfo]
+    workers: list[WorkerInfo]
     metrics: list[Metric]

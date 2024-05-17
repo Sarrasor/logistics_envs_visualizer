@@ -109,11 +109,8 @@ class LogvizController:
         if run_report_path.exists():
             with open(run_report_path, "r") as file:
                 run_report = json.load(file)
-                run_report = {
-                    "metrics": run_report["metrics"],
-                }
         else:
-            run_report = {"metrics": []}
+            run_report = {"orders": [], "workers": [], "metrics": []}
 
         report = run_report
         report["id"] = run_id

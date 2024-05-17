@@ -13,6 +13,8 @@
             <h1 class="text-6xl font-bold dark:text-white">{{ runReport.description.name }}</h1>
             <RunDescription :run-id="runReport.id" :description="runReport.description" />
             <RunMetrics v-if="isComplete(runReport)" :metrics="runReport.metrics" />
+            <WorkersInfo v-if="isComplete(runReport)" :workers="runReport.workers" />
+            <OrdersInfo v-if="isComplete(runReport)" :orders="runReport.orders" />
         </div>
     </div>
 </template>
@@ -22,6 +24,8 @@ import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 import RunDescription from "../components/RunDescription.vue"
 import RunMetrics from "../components/RunMetrics.vue"
+import OrdersInfo from "../components/OrdersInfo.vue"
+import WorkersInfo from "../components/WorkersInfo.vue"
 
 
 const props = defineProps({

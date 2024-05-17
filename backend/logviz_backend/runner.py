@@ -74,9 +74,9 @@ class RideHailingAgent(Agent):
 class Runner:
     def run(self, input_file: BytesIO, run_meta: dict, run_folder: pathlib.Path) -> None:
         if run_meta["parameters"]["logistics_environment"] == "Q_COMMERCE":
-            env, agent = self._create_q_commerce_env(input_file, run_meta)
+            env, agent = self._create_q_commerce_env(input_file, run_meta, run_folder)
         elif run_meta["parameters"]["logistics_environment"] == "RIDE_HAILING":
-            env, agent = self._create_ride_hailing_env(input_file, run_meta)
+            env, agent = self._create_ride_hailing_env(input_file, run_meta, run_folder)
         else:
             raise ValueError(
                 f"Unknown logistics environment: {run_meta['parameters']['logistics_environment']}"
@@ -97,7 +97,9 @@ class Runner:
 
         logger.info(f"Finished environment run: {env}")
 
-    def _create_q_commerce_env(self, input_file: BytesIO, run_meta: dict) -> tuple[gym.Env, Agent]:
+    def _create_q_commerce_env(
+        self, input_file: BytesIO, run_meta: dict, run_folder: pathlib.Path
+    ) -> tuple[gym.Env, Agent]:
         # order_data = pd.read_excel(input_file, skiprows=1, sheet_name="Orders")
         mode = LocationMode[run_meta["parameters"]["location_mode"]]
         config = {
@@ -124,7 +126,7 @@ class Runner:
         return env, agent
 
     def _create_ride_hailing_env(
-        self, input_file: BytesIO, run_meta: dict
+        self, input_file: BytesIO, run_meta: dict, run_folder: pathlib.Path
     ) -> tuple[gym.Env, Agent]:
         mode = LocationMode[run_meta["parameters"]["location_mode"]]
         if run_meta["parameters"]["run_mode"] == "LIVE":
@@ -139,7 +141,7 @@ class Runner:
             "time_step": 1,
             "n_drivers": 3,
             "max_orders": 4,
-            "order_data_path": "/app/server_data/ride_hailing/ride_hailing_example.csv",
+            "order_data_path": str(run_folder / "input_file.xlsx"),
             "order_pickup_time": 1,
             "order_drop_off_time": 1,
             "routing_host": "172.23.0.1:8002",

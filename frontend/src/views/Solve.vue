@@ -168,8 +168,12 @@ function process() {
             return
         }
 
-        // router.push({ name: "RunReport", params: { id: response.data.run_id } })
-        router.push({ name: "LiveMonitor", params: {} })
+        if (runMode.value === "LIVE") {
+            router.push({ name: "LiveMonitor", params: {} })
+        }
+        else {
+            router.push({ name: "RunReport", params: { id: response.data.run_id } })
+        }
     }).catch(function () {
         requestFailure.value = true
         requestFailureMessage.value = "Failed to send the request. Maybe the server is down..."
