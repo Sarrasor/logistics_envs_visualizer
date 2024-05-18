@@ -14,22 +14,28 @@
                         Status
                     </th>
                     <th scope="col" class="px-1 py-3">
+                        Worker id
+                    </th>
+                    <th scope="col" class="px-1 py-3">
                         Creation time
                     </th>
                     <th scope="col" class="px-1 py-3">
                         Assignment time
                     </th>
                     <th scope="col" class="px-1 py-3">
-                        Pickup time
+                        Pickup start time
                     </th>
                     <th scope="col" class="px-1 py-3">
-                        Drop off time
+                        Pickup end time
+                    </th>
+                    <th scope="col" class="px-1 py-3">
+                        Drop off start time
+                    </th>
+                    <th scope="col" class="px-1 py-3">
+                        Drop off end time
                     </th>
                     <th scope="col" class="px-1 py-3">
                         Completion time
-                    </th>
-                    <th scope="col" class="px-1 py-3">
-                        Worker id
                     </th>
                 </tr>
             </thead>
@@ -45,6 +51,9 @@
                         {{ order.status }}
                     </td>
                     <td class="px-1 py-2">
+                        {{ order.assigned_worker_id }}
+                    </td>
+                    <td class="px-1 py-2">
                         {{ order.creation_time }}
                     </td>
                     <td class="px-1 py-2">
@@ -54,13 +63,16 @@
                         {{ order.pickup_start_time }}
                     </td>
                     <td class="px-1 py-2">
+                        {{ order.pickup_end_time }}
+                    </td>
+                    <td class="px-1 py-2">
                         {{ order.drop_off_start_time }}
                     </td>
                     <td class="px-1 py-2">
-                        {{ order.completion_time }}
+                        {{ order.drop_off_end_time }}
                     </td>
                     <td class="px-1 py-2">
-                        {{ order.assigned_worker_id }}
+                        {{ order.completion_time }}
                     </td>
                 </tr>
             </tbody>

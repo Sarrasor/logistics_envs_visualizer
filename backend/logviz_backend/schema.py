@@ -154,6 +154,10 @@ class WorkerInfo(BaseModel):
     travel_type: WorkerTravelType
     speed: float
     color: str
+    status_history: list[tuple[int, WorkerStatus]]
+    n_completed_orders: int
+    idle_rate: float
+    with_order_rate: float
 
 
 class RunReport(BaseModel):

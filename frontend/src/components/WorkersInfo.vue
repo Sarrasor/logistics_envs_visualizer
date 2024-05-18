@@ -11,7 +11,13 @@
                         Travel type
                     </th>
                     <th scope="col" class="px-4 py-3">
-                        Speed
+                        N completed orders
+                    </th>
+                    <th scope="col" class="px-4 py-3">
+                        Idle rate (%)
+                    </th>
+                    <th scope="col" class="px-4 py-3">
+                        With order rate (%)
                     </th>
                 </tr>
             </thead>
@@ -27,7 +33,13 @@
                         {{ worker.travel_type }}
                     </td>
                     <td class="px-4 py-1">
-                        {{ worker.speed }}
+                        {{ worker.n_completed_orders }}
+                    </td>
+                    <td class="px-4 py-1">
+                        {{ worker.idle_rate.toFixed(2) }}
+                    </td>
+                    <td class="px-4 py-1">
+                        {{ worker.with_order_rate.toFixed(2) }}
                     </td>
                 </tr>
             </tbody>
