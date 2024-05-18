@@ -176,7 +176,7 @@ class LogvizController:
             run_name = namesgenerator.get_random_name()
 
         try:
-            creation_time = datetime.datetime.now().isoformat()
+            creation_time = datetime.datetime.now().isoformat() + "Z"
             run_meta = {
                 "id": run_id,
                 "name": run_name,

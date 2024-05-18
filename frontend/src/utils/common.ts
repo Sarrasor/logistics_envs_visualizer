@@ -25,7 +25,9 @@ function hexToRgb(hex: string) {
 
 function formatDateTime(dateTime: string) {
     var d = new Date(dateTime)
-    return formatDate(dateTime) + ' ' + d.getHours() + ':' + d.getMinutes()
+    const hourString = d.getHours() < 10 ? '0' + d.getHours() : d.getHours()
+    const minuteString = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes()
+    return formatDate(dateTime) + ' ' + hourString + ':' + minuteString
 }
 
 function formatDate(dateTime: string) {
