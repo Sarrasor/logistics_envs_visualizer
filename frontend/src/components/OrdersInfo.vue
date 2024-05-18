@@ -78,16 +78,51 @@
             </tbody>
         </table>
     </div>
+
+    <div class="relative overflow-x-auto rounded-2xl shadow-xl mt-2 p-2 bg-white">
+        <PlotlyGraph :data="data" :layout="layout"></PlotlyGraph>
+    </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from "vue"
+import PlotlyGraph from "./PlotlyGraph.vue"
 
-defineProps({
+const data = ref([{}])
+
+const layout = {
+    title: "Order creation times",
+    xaxis: { title: "Creation time" },
+    yaxis: { title: "Count" },
+    modebar: {
+        orientation: 'v'
+    }
+}
+
+const props = defineProps({
     orders: {
         type: Object,
         required: true
     }
 })
+
+onMounted(() => {
+    const orderCreationTimes = props.orders.map(order => order.creation_time)
+    console.log(orderCreationTimes)
+    data.value = [{
+        x: orderCreationTimes,
+        type: 'histogram',
+        marker: {
+            color: "#a5b4fc",
+            line: {
+                color: "#6366f1",
+                width: 1.0,
+            }
+        },
+        opacity: 0.5,
+    }]
+});
+
 </script>
 
 <style scoped></style>
