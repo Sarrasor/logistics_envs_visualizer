@@ -1,6 +1,6 @@
 <template>
     <div id="map-viewport" class="h-screen">
-        <l-map @ready="onReady" ref="map" :zoom="zoom" :center="center" style="z-index: 0;">
+        <l-map @ready="onReady" ref="map" :zoom="zoom" :center="center" style="z-index: 0;" :use-global-leaflet="false">
             <l-tile-layer :url="url" layer-type="base" name="OpenStreetMap"></l-tile-layer>
             <span v-for="worker in frameData.observation.workers" :key="worker.id">
                 <WorkerMarker :worker="worker" />

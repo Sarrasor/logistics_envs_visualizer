@@ -134,19 +134,26 @@ class Runner:
         else:
             render_mode = None
 
+        orders = pd.read_excel(input_file, sheet_name="orders")
+        orders.to_excel(run_folder / "orders.xlsx", index=False)
+
+        workers = pd.read_excel(input_file, sheet_name="workers")
+        config = pd.read_excel(input_file, sheet_name="config")
+        config = config.iloc[0]
+
         config = {
             "mode": mode,
-            "start_time": 0,
-            "end_time": 1200,
-            "time_step": 1,
-            "n_drivers": 3,
-            "max_orders": 4,
-            "order_data_path": str(run_folder / "input_file.xlsx"),
-            "order_pickup_time": 1,
-            "order_drop_off_time": 1,
-            "routing_host": "172.23.0.1:8002",
-            "render_host": "172.23.0.1:8000",
-            "seed": 42,
+            "start_time": config["start_time"],
+            "end_time": config["end_time"],
+            "time_step": config["time_step"],
+            "n_drivers": len(workers),
+            "max_orders": config["max_orders"],
+            "order_data_path": str(run_folder / "orders.xlsx"),
+            "order_pickup_time": config["order_pickup_time"],
+            "order_drop_off_time": config["order_drop_off_time"],
+            "seed": config["seed"],
+            "routing_host": "172.24.0.1:8002",
+            "render_host": "172.24.0.1:8000",
         }
         env = gym.make("logistics_envs/RideHailing-v0", render_mode=render_mode, **config)
         agent = RideHailingAgent()

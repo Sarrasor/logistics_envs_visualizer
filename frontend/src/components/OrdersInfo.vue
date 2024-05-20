@@ -80,7 +80,7 @@
     </div>
 
     <div class="relative overflow-x-auto rounded-2xl shadow-xl mt-2 p-2 bg-white">
-        <PlotlyGraph :data="data" :layout="layout"></PlotlyGraph>
+        <PlotlyGraph :data="creationTimeData" :layout="creationTimeLayout"></PlotlyGraph>
     </div>
 </template>
 
@@ -88,16 +88,10 @@
 import { ref, onMounted } from "vue"
 import PlotlyGraph from "./PlotlyGraph.vue"
 
-const data = ref([{}])
+const histogramBins = 200
 
-const layout = {
-    title: "Order creation times",
-    xaxis: { title: "Creation time" },
-    yaxis: { title: "Count" },
-    modebar: {
-        orientation: 'v'
-    }
-}
+const creationTimeData = ref([{}])
+const creationTimeLayout = ref({})
 
 const props = defineProps({
     orders: {
@@ -107,10 +101,17 @@ const props = defineProps({
 })
 
 onMounted(() => {
+    const startTime = 0
+    const endTime = 1200
+
     const orderCreationTimes = props.orders.map(order => order.creation_time)
-    console.log(orderCreationTimes)
-    data.value = [{
+    creationTimeData.value = [{
         x: orderCreationTimes,
+        xbins: {
+            start: startTime,
+            end: endTime,
+            size: (endTime - startTime) / histogramBins,
+        },
         type: 'histogram',
         marker: {
             color: "#a5b4fc",
@@ -121,6 +122,14 @@ onMounted(() => {
         },
         opacity: 0.5,
     }]
+    creationTimeLayout.value = {
+        title: "Order creation times",
+        xaxis: { title: "Creation time", range: [startTime, endTime] },
+        yaxis: { title: "Count" },
+        modebar: {
+            orientation: 'v'
+        }
+    }
 });
 
 </script>
