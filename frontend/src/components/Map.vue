@@ -8,6 +8,9 @@
             <span v-for="order in frameData.observation.orders" :key="order.id">
                 <OrderMarker :order="order" />
             </span>
+            <span v-for="serviceStation in frameData.observation.service_stations" :key="serviceStation.id">
+                <ServiceStationMarker :serviceStation="serviceStation" />
+            </span>
         </l-map>
     </div>
 </template>
@@ -23,6 +26,7 @@ import "leaflet/dist/leaflet.css"
 
 import WorkerMarker from "./WorkerMarker.vue"
 import OrderMarker from "./OrderMarker.vue"
+import ServiceStationMarker from "./ServiceStationMarker.vue"
 
 const props = defineProps({
     frameData: {

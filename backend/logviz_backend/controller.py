@@ -110,7 +110,13 @@ class LogvizController:
             with open(run_report_path, "r") as file:
                 run_report = json.load(file)
         else:
-            run_report = {"orders": [], "workers": [], "metrics": []}
+            run_report = {
+                "start_time": None,
+                "end_time": None,
+                "orders": [],
+                "workers": [],
+                "metrics": [],
+            }
 
         report = run_report
         report["id"] = run_id

@@ -55,9 +55,11 @@ function getPathPoints(encoded_path: string, remainingPathIndex: number, current
 }
 
 function workerPopup(worker: WorkerObservation) {
+    const fuelPercentage = (100.0 * worker.fuel).toFixed(2)
     return "<h1><b>Worker</b></h1><br>" +
         `<b>Id:</b> ${worker.id}<br>` +
         `<b>Location:</b> ${worker.location.lat.toFixed(6)}, ${worker.location.lon.toFixed(6)}</br>` +
+        `<b>Fuel:</b> ${fuelPercentage}%<br>` +
         `<b>Status:</b> ${worker.status}<br>`
 }
 

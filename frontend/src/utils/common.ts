@@ -2,6 +2,8 @@ type Location = { lat: number, lon: number }
 
 type WorkerObservation = { id: string, location: Location }
 
+type ServiceStationObservation = { id: string, location: Location }
+
 type Metric = { name: string, value: number, unit: string }
 
 function locationToList(location: Location) {
@@ -60,4 +62,4 @@ function getMetricValueString(metric: Metric) {
 }
 
 export { locationToList, isBright, formatDateTime, formatDate, getMetricValueString }
-export type { Location, WorkerObservation, Metric }
+export type { Location, WorkerObservation, ServiceStationObservation, Metric }

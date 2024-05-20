@@ -4,11 +4,10 @@ import json
 import logging
 import pathlib
 import gymnasium as gym
-import pandas as pd
 
 import logistics_envs
 from logistics_envs.sim import LocationMode
-from logistics_envs.envs.ride_hailing_env import DriverConfig
+from logistics_envs.envs.ride_hailing_env_config import RideHailingEnvConfig
 
 logger = logging.getLogger("logviz_backend.runner")
 
@@ -54,18 +53,18 @@ class RideHailingAgent(Agent):
             "location": [0.0, 0.0] * n_drivers,
         }
 
-        assigned_orders = set()
-        n_orders = observation["n_orders"]
+        assigned_rides = set()
+        n_rides = observation["n_rides"]
         for driver_index in range(n_drivers):
             if observation["drivers_status"][driver_index] == 0:
-                for order_index in range(n_orders):
+                for ride_index in range(n_rides):
                     if (
-                        observation["orders_status"][order_index] == 0
-                        and order_index not in assigned_orders
+                        observation["rides_status"][ride_index] == 0
+                        and ride_index not in assigned_rides
                     ):
                         action["action"][driver_index] = 2
-                        action["target"][driver_index] = order_index
-                        assigned_orders.add(order_index)
+                        action["target"][driver_index] = ride_index
+                        assigned_rides.add(ride_index)
                         break
 
         return action
@@ -73,6 +72,7 @@ class RideHailingAgent(Agent):
 
 class Runner:
     def run(self, input_file: BytesIO, run_meta: dict, run_folder: pathlib.Path) -> None:
+        logger.info("Creating environment")
         if run_meta["parameters"]["logistics_environment"] == "Q_COMMERCE":
             env, agent = self._create_q_commerce_env(input_file, run_meta, run_folder)
         elif run_meta["parameters"]["logistics_environment"] == "RIDE_HAILING":
@@ -83,7 +83,10 @@ class Runner:
             )
 
         logger.info(f"Running environment: {env}")
-        observation, info = env.reset()
+        options = {
+            "simulation_id": run_meta["id"],
+        }
+        observation, info = env.reset(options=options)
         done = False
 
         while not done:
@@ -134,40 +137,15 @@ class Runner:
         else:
             render_mode = None
 
-        orders = pd.read_excel(input_file, sheet_name="orders")
-        orders.to_excel(run_folder / "orders.xlsx", index=False)
+        config = RideHailingEnvConfig.from_file(
+            file_path=str(run_folder / "input_file.xlsx"),
+            mode=mode,
+            render_mode=render_mode,
+            routing_host="172.24.0.1:8002",
+            render_host="172.24.0.1:8000",
+        )
 
-        workers = pd.read_excel(input_file, sheet_name="workers")
-        drivers_config = []
-        for _, worker in workers.iterrows():
-            drivers_config.append(
-                DriverConfig(
-                    id=worker["id"],
-                    lat=worker["lat"],
-                    lon=worker["lon"],
-                    travel_type=worker["travel_type"],
-                    speed=worker["speed"],
-                )
-            )
-
-        config = pd.read_excel(input_file, sheet_name="config")
-        config = config.iloc[0]
-
-        config = {
-            "mode": mode,
-            "start_time": config["start_time"],
-            "end_time": config["end_time"],
-            "time_step": config["time_step"],
-            "drivers_config": drivers_config,
-            "max_orders": config["max_orders"],
-            "order_data_path": str(run_folder / "orders.xlsx"),
-            "order_pickup_time": config["order_pickup_time"],
-            "order_drop_off_time": config["order_drop_off_time"],
-            "seed": config["seed"],
-            "routing_host": "172.24.0.1:8002",
-            "render_host": "172.24.0.1:8000",
-        }
-        env = gym.make("logistics_envs/RideHailing-v0", render_mode=render_mode, **config)
+        env = gym.make("logistics_envs/RideHailing-v0", config=config)
         agent = RideHailingAgent()
 
         return env, agent

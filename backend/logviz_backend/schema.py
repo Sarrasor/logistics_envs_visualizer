@@ -20,7 +20,9 @@ class Location(BaseModel):
 
 class WorkerStatus(str, Enum):
     IDLE = "IDLE"
+    IN_SERVICE = "IN_SERVICE"
     MOVING = "MOVING"
+    MOVING_TO_SERVICE = "MOVING_TO_SERVICE"
     MOVING_TO_PICKUP = "MOVING_TO_PICKUP"
     MOVING_TO_DROP_OFF = "MOVING_TO_DROP_OFF"
     PICKING_UP = "PICKING_UP"
@@ -38,6 +40,7 @@ class WorkerObservation(BaseModel):
     location: Location
     travel_type: WorkerTravelType
     speed: float
+    fuel: float
     path: Optional[str]
     remaining_path_index: Optional[int]
     status: WorkerStatus
@@ -63,6 +66,11 @@ class OrderObservation(BaseModel):
     status: OrderStatus
 
 
+class ServiceStationObservation(BaseModel):
+    id: str
+    location: Location
+
+
 class Bounds(BaseModel):
     min: Location
     max: Location
@@ -73,6 +81,7 @@ class Observation(BaseModel):
     bounds: Bounds
     workers: list[WorkerObservation]
     orders: list[OrderObservation]
+    service_stations: list[ServiceStationObservation]
 
 
 class Metric(BaseModel):
@@ -163,8 +172,8 @@ class WorkerInfo(BaseModel):
 class RunReport(BaseModel):
     id: str
     description: RunDescription
-    start_time: int
-    end_time: int
+    start_time: Optional[int]
+    end_time: Optional[int]
     orders: list[OrderInfo]
     workers: list[WorkerInfo]
     metrics: list[Metric]

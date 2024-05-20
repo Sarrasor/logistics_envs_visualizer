@@ -13,6 +13,9 @@
                     <th scope="col" class="px-4 py-3">
                         Status
                     </th>
+                    <th scope="col" class="px-4 py-3">
+                        Fuel
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -25,6 +28,9 @@
                     </th>
                     <td class="px-4 py-1">
                         {{ worker.status }}
+                    </td>
+                    <td class="px-4 py-1">
+                        {{ (100.0 * worker.fuel).toFixed(2) }}%
                     </td>
                 </tr>
             </tbody>
