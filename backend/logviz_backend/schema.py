@@ -163,6 +163,8 @@ class WorkerInfo(BaseModel):
 class RunReport(BaseModel):
     id: str
     description: RunDescription
+    start_time: int
+    end_time: int
     orders: list[OrderInfo]
     workers: list[WorkerInfo]
     metrics: list[Metric]

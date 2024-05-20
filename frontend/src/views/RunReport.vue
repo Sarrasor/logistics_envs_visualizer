@@ -14,7 +14,8 @@
             <RunDescription :run-id="runReport.id" :description="runReport.description" />
             <RunMetrics v-if="isComplete(runReport)" :metrics="runReport.metrics" />
             <WorkersInfo v-if="isComplete(runReport)" :workers="runReport.workers" />
-            <OrdersInfo v-if="isComplete(runReport)" :orders="runReport.orders" />
+            <OrdersInfo v-if="isComplete(runReport)" :orders="runReport.orders" :startTime="runReport.start_time"
+                :endTime="runReport.end_time" />
         </div>
     </div>
 </template>

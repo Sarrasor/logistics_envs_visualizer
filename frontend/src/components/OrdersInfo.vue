@@ -82,6 +82,10 @@
     <div class="relative overflow-x-auto rounded-2xl shadow-xl mt-2 p-2 bg-white">
         <PlotlyGraph :data="creationTimeData" :layout="creationTimeLayout"></PlotlyGraph>
     </div>
+
+    <div class="relative overflow-x-auto rounded-2xl shadow-xl mt-2 p-2 bg-white">
+        <PlotlyGraph :data="timeToAssignData" :layout="timeToAssignLayout"></PlotlyGraph>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -93,24 +97,32 @@ const histogramBins = 200
 const creationTimeData = ref([{}])
 const creationTimeLayout = ref({})
 
+const timeToAssignData = ref([{}])
+const timeToAssignLayout = ref({})
+
 const props = defineProps({
     orders: {
         type: Object,
+        required: true
+    },
+    startTime: {
+        type: Number,
+        required: true
+    },
+    endTime: {
+        type: Number,
         required: true
     }
 })
 
 onMounted(() => {
-    const startTime = 0
-    const endTime = 1200
-
     const orderCreationTimes = props.orders.map(order => order.creation_time)
     creationTimeData.value = [{
         x: orderCreationTimes,
         xbins: {
-            start: startTime,
-            end: endTime,
-            size: (endTime - startTime) / histogramBins,
+            start: props.startTime,
+            end: props.endTime,
+            size: (props.endTime - props.startTime) / histogramBins,
         },
         type: 'histogram',
         marker: {
@@ -124,7 +136,34 @@ onMounted(() => {
     }]
     creationTimeLayout.value = {
         title: "Order creation times",
-        xaxis: { title: "Creation time", range: [startTime, endTime] },
+        xaxis: { title: "Creation time", range: [props.startTime, props.endTime] },
+        yaxis: { title: "Count" },
+        modebar: {
+            orientation: 'v'
+        }
+    }
+
+    const orderTimeToAssign = props.orders.map(order => (order.assignment_time || props.endTime) - order.creation_time)
+    timeToAssignData.value = [{
+        x: orderTimeToAssign,
+        xbins: {
+            start: props.startTime,
+            end: props.endTime,
+            size: (props.endTime - props.startTime) / histogramBins,
+        },
+        type: 'histogram',
+        marker: {
+            color: "#a5b4fc",
+            line: {
+                color: "#6366f1",
+                width: 1.0,
+            }
+        },
+        opacity: 0.5,
+    }]
+    timeToAssignLayout.value = {
+        title: "Order time to assign",
+        xaxis: { title: "Time to assign", range: [0, props.endTime] },
         yaxis: { title: "Count" },
         modebar: {
             orientation: 'v'
