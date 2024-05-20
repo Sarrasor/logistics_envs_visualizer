@@ -8,7 +8,7 @@ import pandas as pd
 
 import logistics_envs
 from logistics_envs.sim import LocationMode
-
+from logistics_envs.envs.ride_hailing_env import DriverConfig
 
 logger = logging.getLogger("logviz_backend.runner")
 
@@ -138,6 +138,18 @@ class Runner:
         orders.to_excel(run_folder / "orders.xlsx", index=False)
 
         workers = pd.read_excel(input_file, sheet_name="workers")
+        drivers_config = []
+        for _, worker in workers.iterrows():
+            drivers_config.append(
+                DriverConfig(
+                    id=worker["id"],
+                    lat=worker["lat"],
+                    lon=worker["lon"],
+                    travel_type=worker["travel_type"],
+                    speed=worker["speed"],
+                )
+            )
+
         config = pd.read_excel(input_file, sheet_name="config")
         config = config.iloc[0]
 
@@ -146,7 +158,7 @@ class Runner:
             "start_time": config["start_time"],
             "end_time": config["end_time"],
             "time_step": config["time_step"],
-            "n_drivers": len(workers),
+            "drivers_config": drivers_config,
             "max_orders": config["max_orders"],
             "order_data_path": str(run_folder / "orders.xlsx"),
             "order_pickup_time": config["order_pickup_time"],

@@ -685,7 +685,7 @@ requests = "^2.31.0"
 type = "git"
 url = "https://github.com/Sarrasor/logistics_envs.git"
 reference = "main"
-resolved_reference = "cb7629db049e8f5f00b8579fc54fbf98f0846fc6"
+resolved_reference = "4049bd67b8825d7bdf3cf214c21335b988d61b86"
 
 [[package]]
 name = "namesgenerator"
