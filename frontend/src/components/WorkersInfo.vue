@@ -19,6 +19,13 @@
                     <th scope="col" class="px-4 py-3">
                         With order rate (%)
                     </th>
+                    <th scope="col" class="px-4 py-3">
+                        Travel distance
+                    </th>
+                    <th scope="col" class="px-4 py-3">
+                        N service station visits
+                    </th>
+
                 </tr>
             </thead>
             <tbody>
@@ -40,6 +47,12 @@
                     </td>
                     <td class="px-4 py-1">
                         {{ worker.with_order_rate.toFixed(2) }}
+                    </td>
+                    <td class="px-4 py-1">
+                        {{ worker.traveled_distance.toFixed(2) }}
+                    </td>
+                    <td class="px-4 py-1">
+                        {{ worker.n_service_station_visits }}
                     </td>
                 </tr>
             </tbody>

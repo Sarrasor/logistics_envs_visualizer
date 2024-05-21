@@ -51,28 +51,28 @@
                         {{ order.status }}
                     </td>
                     <td class="px-1 py-2">
-                        {{ order.assigned_worker_id }}
+                        {{ order.assigned_worker_id || "—" }}
                     </td>
                     <td class="px-1 py-2">
                         {{ order.creation_time }}
                     </td>
                     <td class="px-1 py-2">
-                        {{ order.assignment_time }}
+                        {{ order.assignment_time || "—" }}
                     </td>
                     <td class="px-1 py-2">
-                        {{ order.pickup_start_time }}
+                        {{ order.pickup_start_time || "—" }}
                     </td>
                     <td class="px-1 py-2">
-                        {{ order.pickup_end_time }}
+                        {{ order.pickup_end_time || "—" }}
                     </td>
                     <td class="px-1 py-2">
-                        {{ order.drop_off_start_time }}
+                        {{ order.drop_off_start_time || "—" }}
                     </td>
                     <td class="px-1 py-2">
-                        {{ order.drop_off_end_time }}
+                        {{ order.drop_off_end_time || "—" }}
                     </td>
                     <td class="px-1 py-2">
-                        {{ order.completion_time }}
+                        {{ order.completion_time || "—" }}
                     </td>
                 </tr>
             </tbody>
