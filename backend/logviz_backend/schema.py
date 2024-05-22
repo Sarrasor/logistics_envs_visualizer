@@ -54,6 +54,7 @@ class OrderStatus(str, Enum):
     IN_DELIVERY = "IN_DELIVERY"
     IN_DROP_OFF = "IN_DROP_OFF"
     COMPLETED = "COMPLETED"
+    CANCELED = "CANCELED"
 
 
 class OrderObservation(BaseModel):
