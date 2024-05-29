@@ -1,6 +1,6 @@
 <template>
     <h2 class="mt-10 text-3xl font-medium text-gray-900 dark:text-white">Orders</h2>
-    <div class="relative overflow-x-auto rounded-2xl shadow-xl mt-2">
+    <div class="relative overflow-x-auto rounded-2xl shadow-xl max-h-dvh mt-2">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 bg-primary-200 sticky top-0">
                 <tr>
@@ -86,11 +86,30 @@
     <div class="relative overflow-x-auto rounded-2xl shadow-xl mt-2 p-2 bg-white">
         <PlotlyGraph :data="timeToAssignData" :layout="timeToAssignLayout"></PlotlyGraph>
     </div>
+
+    <div class="relative overflow-x-auto rounded-2xl shadow-xl mt-2 bg-white">
+        <p class="bg-white p-4 rounded-2xl text-center text-lg dark:bg-gray-800 dark:text-white">
+            Orders from location distribution
+        </p>
+        <div class="relative overflow-x-auto rounded-2xl bg-white">
+            <MapInfo :points="orderFromLocations"></MapInfo>
+        </div>
+    </div>
+
+    <div class="relative overflow-x-auto rounded-2xl shadow-xl mt-2 bg-white">
+        <p class="bg-white p-4 rounded-2xl text-center text-lg dark:bg-gray-800 dark:text-white">
+            Orders to location distribution
+        </p>
+        <div class="relative overflow-x-auto rounded-2xl bg-white">
+            <MapInfo :points="orderToLocations"></MapInfo>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
 import PlotlyGraph from "./PlotlyGraph.vue"
+import MapInfo from "./MapInfo.vue"
 
 const histogramBins = 200
 
@@ -99,6 +118,9 @@ const creationTimeLayout = ref({})
 
 const timeToAssignData = ref([{}])
 const timeToAssignLayout = ref({})
+
+const orderFromLocations = ref([])
+const orderToLocations = ref([])
 
 const props = defineProps({
     orders: {
@@ -143,14 +165,9 @@ onMounted(() => {
         }
     }
 
-    const orderTimeToAssign = props.orders.map(order => (order.assignment_time || props.endTime) - order.creation_time)
+    const orderTimeToAssign = props.orders.flatMap(order => order.assignment_time ? order.assignment_time - order.creation_time : [])
     timeToAssignData.value = [{
         x: orderTimeToAssign,
-        xbins: {
-            start: props.startTime,
-            end: props.endTime,
-            size: (props.endTime - props.startTime) / histogramBins,
-        },
         type: 'histogram',
         marker: {
             color: "#a5b4fc",
@@ -163,12 +180,28 @@ onMounted(() => {
     }]
     timeToAssignLayout.value = {
         title: "Order time to assign",
-        xaxis: { title: "Time to assign", range: [0, props.endTime] },
+        xaxis: { title: "Time to assign" },
         yaxis: { title: "Count" },
         modebar: {
             orientation: 'v'
         }
     }
+
+    orderFromLocations.value = props.orders.map(order => {
+        return {
+            id: order.id,
+            lat: order.from_location.lat,
+            lon: order.from_location.lon
+        }
+    })
+
+    orderToLocations.value = props.orders.map(order => {
+        return {
+            id: order.id,
+            lat: order.to_location.lat,
+            lon: order.to_location.lon
+        }
+    })
 });
 
 </script>
