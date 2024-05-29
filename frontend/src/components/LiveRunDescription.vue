@@ -3,7 +3,12 @@
     <dl class="bg-white px-4 py-1 shadow-xl rounded-2xl text-gray-900 divide-y divide-gray-200 mt-2">
         <div class="flex flex-col py-1">
             <dt class="mb-1 text-gray-500 ">Run id</dt>
-            <dd class="font-semibold">{{ frameData.info.simulation_id }}</dd>
+            <dd class="font-semibold underline">
+                <RouterLink :to="getRunLink(frameData.info.simulation_id)" target="_blank"
+                    class="hover:text-primary-600">
+                    {{ frameData.info.simulation_id }}
+                </RouterLink>
+            </dd>
         </div>
         <div class="flex flex-col py-1">
             <dt class="mb-1 text-gray-500 ">Time</dt>
@@ -25,4 +30,8 @@ defineProps({
         required: true
     },
 })
+
+function getRunLink(runId: string) {
+    return `/runs/${runId}`
+}
 </script>

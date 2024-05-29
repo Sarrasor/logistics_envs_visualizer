@@ -11,7 +11,13 @@
                         Travel type
                     </th>
                     <th scope="col" class="px-4 py-3">
+                        N assigned orders
+                    </th>
+                    <th scope="col" class="px-4 py-3">
                         N completed orders
+                    </th>
+                    <th scope="col" class="px-4 py-3">
+                        Completion rate (%)
                     </th>
                     <th scope="col" class="px-4 py-3">
                         Idle rate (%)
@@ -20,7 +26,10 @@
                         With order rate (%)
                     </th>
                     <th scope="col" class="px-4 py-3">
-                        Travel distance
+                        Travel distance (km)
+                    </th>
+                    <th scope="col" class="px-4 py-3">
+                        Total fuel consumption (%)
                     </th>
                     <th scope="col" class="px-4 py-3">
                         N service station visits
@@ -40,7 +49,13 @@
                         {{ worker.travel_type }}
                     </td>
                     <td class="px-4 py-1">
+                        {{ worker.n_assigned_orders }}
+                    </td>
+                    <td class="px-4 py-1">
                         {{ worker.n_completed_orders }}
+                    </td>
+                    <td class="px-4 py-1">
+                        {{ worker.completion_rate.toFixed(2) }}
                     </td>
                     <td class="px-4 py-1">
                         {{ worker.idle_rate.toFixed(2) }}
@@ -50,6 +65,9 @@
                     </td>
                     <td class="px-4 py-1">
                         {{ worker.traveled_distance.toFixed(2) }}
+                    </td>
+                    <td class="px-4 py-1">
+                        {{ worker.consumed_fuel.toFixed(2) }}
                     </td>
                     <td class="px-4 py-1">
                         {{ worker.n_service_station_visits }}

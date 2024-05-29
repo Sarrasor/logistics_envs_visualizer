@@ -165,10 +165,13 @@ class WorkerInfo(BaseModel):
     speed: float
     color: str
     status_history: list[tuple[int, WorkerStatus]]
+    n_assigned_orders: int
     n_completed_orders: int
+    completion_rate: float
     idle_rate: float
     with_order_rate: float
     traveled_distance: float
+    consumed_fuel: float
     n_service_station_visits: int
 
 
