@@ -8,6 +8,7 @@ import gymnasium as gym
 import logistics_envs
 from logistics_envs.sim import LocationMode
 from logistics_envs.envs.ride_hailing_env_config import RideHailingEnvConfig
+import numpy as np
 
 logger = logging.getLogger("logviz_backend.runner")
 
@@ -47,6 +48,7 @@ class QCommerceAgent(Agent):
 class RideHailingAgent(Agent):
     def act(self, observation: dict, info: dict) -> dict:
         n_drivers = len(observation["drivers_status"])
+        n_stations = observation["charging_stations_location"].shape[0]
         action = {
             "action": [0] * n_drivers,
             "target": [0] * n_drivers,
@@ -57,16 +59,20 @@ class RideHailingAgent(Agent):
         n_rides = observation["n_rides"]
         for driver_index in range(n_drivers):
             if observation["drivers_status"][driver_index] == 0:
-                for ride_index in range(n_rides):
-                    if (
-                        observation["rides_status"][ride_index] == 0
-                        and ride_index not in assigned_rides
-                    ):
-                        action["action"][driver_index] = 2
-                        action["target"][driver_index] = ride_index
-                        assigned_rides.add(ride_index)
-                        break
-
+                if n_stations >= 1 and observation["drivers_fuel"][driver_index][0] < 0.25:
+                    station_index = np.random.randint(0, n_stations)
+                    action["action"][driver_index] = 3
+                    action["target"][driver_index] = station_index
+                else:
+                    for ride_index in range(n_rides):
+                        if (
+                            observation["rides_status"][ride_index] == 0
+                            and ride_index not in assigned_rides
+                        ):
+                            action["action"][driver_index] = 2
+                            action["target"][driver_index] = ride_index
+                            assigned_rides.add(ride_index)
+                            break
         return action
 
 
@@ -141,8 +147,8 @@ class Runner:
             file_path=str(run_folder / "input_file.xlsx"),
             mode=mode,
             render_mode=render_mode,
-            routing_host="172.24.0.1:8002",
-            render_host="172.24.0.1:8000",
+            routing_host="172.25.0.1:8002",
+            render_host="172.25.0.1:8000",
         )
 
         env = gym.make("logistics_envs/RideHailing-v0", config=config)
