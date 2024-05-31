@@ -147,8 +147,8 @@ class Runner:
             file_path=str(run_folder / "input_file.xlsx"),
             mode=mode,
             render_mode=render_mode,
-            routing_host="172.25.0.1:8002",
-            render_host="172.25.0.1:8000",
+            routing_host="172.24.0.1:8002",
+            render_host="172.24.0.1:8000",
         )
 
         env = gym.make("logistics_envs/RideHailing-v0", config=config)

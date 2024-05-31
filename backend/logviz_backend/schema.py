@@ -175,6 +175,12 @@ class WorkerInfo(BaseModel):
     n_service_station_visits: int
 
 
+class ServiceStationInfo(BaseModel):
+    id: str
+    location: Location
+    service_events: list[tuple[str, int, int]]
+
+
 class RunReport(BaseModel):
     id: str
     description: RunDescription
@@ -182,4 +188,5 @@ class RunReport(BaseModel):
     end_time: Optional[int]
     orders: list[OrderInfo]
     workers: list[WorkerInfo]
+    service_stations: list[ServiceStationInfo]
     metrics: list[Metric]
