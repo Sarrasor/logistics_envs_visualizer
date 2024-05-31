@@ -37,6 +37,12 @@
                     <th scope="col" class="px-1 py-3">
                         Completion time
                     </th>
+                    <th scope="col" class="px-1 py-3">
+                        Waiting time
+                    </th>
+                    <th scope="col" class="px-1 py-3">
+                        Trip duration
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -74,6 +80,12 @@
                     <td class="px-1 py-2">
                         {{ order.completion_time || "—" }}
                     </td>
+                    <td class="px-1 py-2">
+                        {{ getWaitingTime(order) || "—" }}
+                    </td>
+                    <td class="px-1 py-2">
+                        {{ getTripDurationTime(order) || "—" }}
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -85,6 +97,14 @@
 
     <div class="relative overflow-x-auto rounded-2xl shadow-xl mt-2 p-2 bg-white">
         <PlotlyGraph :data="timeToAssignData" :layout="timeToAssignLayout"></PlotlyGraph>
+    </div>
+
+    <div class="relative overflow-x-auto rounded-2xl shadow-xl mt-2 p-2 bg-white">
+        <PlotlyGraph :data="waitingTimeData" :layout="waitingTimeLayout"></PlotlyGraph>
+    </div>
+
+    <div class="relative overflow-x-auto rounded-2xl shadow-xl mt-2 p-2 bg-white">
+        <PlotlyGraph :data="tripDurationData" :layout="tripDurationLayout"></PlotlyGraph>
     </div>
 
     <div class="relative overflow-x-auto rounded-2xl shadow-xl mt-2 bg-white">
@@ -119,8 +139,15 @@ const creationTimeLayout = ref({})
 const timeToAssignData = ref([{}])
 const timeToAssignLayout = ref({})
 
+const waitingTimeData = ref([{}])
+const waitingTimeLayout = ref({})
+
+const tripDurationData = ref([{}])
+const tripDurationLayout = ref({})
+
 const orderFromLocations = ref([])
 const orderToLocations = ref([])
+
 
 const props = defineProps({
     orders: {
@@ -187,6 +214,50 @@ onMounted(() => {
         }
     }
 
+    const orderWaitingTimes = props.orders.flatMap(order => getWaitingTime(order) || [])
+    waitingTimeData.value = [{
+        x: orderWaitingTimes,
+        type: 'histogram',
+        marker: {
+            color: "#a5b4fc",
+            line: {
+                color: "#6366f1",
+                width: 1.0,
+            }
+        },
+        opacity: 0.5,
+    }]
+    waitingTimeLayout.value = {
+        title: "Order waiting times",
+        xaxis: { title: "Waiting time" },
+        yaxis: { title: "Count" },
+        modebar: {
+            orientation: 'v'
+        }
+    }
+
+    const orderTripDurations = props.orders.flatMap(order => getTripDurationTime(order) || [])
+    tripDurationData.value = [{
+        x: orderTripDurations,
+        type: 'histogram',
+        marker: {
+            color: "#a5b4fc",
+            line: {
+                color: "#6366f1",
+                width: 1.0,
+            }
+        },
+        opacity: 0.5,
+    }]
+    tripDurationLayout.value = {
+        title: "Order trip durations",
+        xaxis: { title: "Trip duration" },
+        yaxis: { title: "Count" },
+        modebar: {
+            orientation: 'v'
+        }
+    }
+
     orderFromLocations.value = props.orders.map(order => {
         return {
             id: order.id,
@@ -203,6 +274,21 @@ onMounted(() => {
         }
     })
 });
+
+
+function getWaitingTime(order: Object) {
+    if (order.pickup_start_time && order.creation_time) {
+        return order.pickup_start_time - order.creation_time
+    }
+    return undefined
+}
+
+function getTripDurationTime(order: Object) {
+    if (order.drop_off_start_time && order.pickup_end_time) {
+        return order.drop_off_start_time - order.pickup_end_time
+    }
+    return undefined
+}
 
 </script>
 
