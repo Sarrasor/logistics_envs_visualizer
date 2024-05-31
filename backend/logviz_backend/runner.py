@@ -55,24 +55,44 @@ class RideHailingAgent(Agent):
             "location": [0.0, 0.0] * n_drivers,
         }
 
-        assigned_rides = set()
         n_rides = observation["n_rides"]
+        assigned_drivers = set()
+        fifo_ride_indices = sorted(
+            range(n_rides),
+            key=lambda ride_index: observation["rides_creation_time"][ride_index],
+        )
+
         for driver_index in range(n_drivers):
             if observation["drivers_status"][driver_index] == 0:
                 if n_stations >= 1 and observation["drivers_fuel"][driver_index][0] < 0.25:
                     station_index = np.random.randint(0, n_stations)
                     action["action"][driver_index] = 3
                     action["target"][driver_index] = station_index
-                else:
-                    for ride_index in range(n_rides):
-                        if (
-                            observation["rides_status"][ride_index] == 0
-                            and ride_index not in assigned_rides
-                        ):
-                            action["action"][driver_index] = 2
-                            action["target"][driver_index] = ride_index
-                            assigned_rides.add(ride_index)
-                            break
+                    assigned_drivers.add(driver_index)
+
+        for ride_index in fifo_ride_indices:
+            if observation["rides_status"][ride_index] != 0:
+                continue
+
+            ride_location = observation["rides_from_location"][ride_index]
+            distances = []
+            for driver_index in range(n_drivers):
+                if (
+                    observation["drivers_status"][driver_index] != 0
+                    or driver_index in assigned_drivers
+                ):
+                    continue
+
+                driver_location = observation["drivers_location"][driver_index]
+                distance = np.linalg.norm(ride_location - driver_location)
+                distances.append((distance, driver_index))
+            best_driver_index = min(distances)[1] if distances else None
+
+            if best_driver_index is not None:
+                assigned_drivers.add(best_driver_index)
+                action["action"][best_driver_index] = 2
+                action["target"][best_driver_index] = ride_index
+
         return action
 
 
