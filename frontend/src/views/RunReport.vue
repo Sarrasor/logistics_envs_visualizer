@@ -16,6 +16,8 @@
             <WorkersInfo v-if="isComplete(runReport)" :workers="runReport.workers" />
             <OrdersInfo v-if="isComplete(runReport)" :orders="runReport.orders" :startTime="runReport.start_time"
                 :endTime="runReport.end_time" />
+            <ServiceStationsInfo v-if="isComplete(runReport)" :serviceStations="runReport.service_stations"
+                :startTime="runReport.start_time" :endTime="runReport.end_time" />
         </div>
     </div>
 </template>
@@ -27,6 +29,7 @@ import RunDescription from "../components/RunDescription.vue"
 import RunMetrics from "../components/RunMetrics.vue"
 import OrdersInfo from "../components/OrdersInfo.vue"
 import WorkersInfo from "../components/WorkersInfo.vue"
+import ServiceStationsInfo from "../components/ServiceStationsInfo.vue"
 
 
 const props = defineProps({
