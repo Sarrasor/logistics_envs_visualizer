@@ -5,6 +5,7 @@ from fastapi import FastAPI, APIRouter
 
 from logviz_backend.schema import (
     Healthcheck,
+    InputValidationResponse,
     RenderResponse,
     RunReport,
     RunThumbnail,
@@ -29,6 +30,11 @@ def main():
         methods=["GET"],
     )
     router.add_api_route(
+        "/example_file",
+        controller.get_example_input_file,
+        methods=["GET"],
+    )
+    router.add_api_route(
         "/render",
         controller.render,
         response_model=RenderResponse,
@@ -47,10 +53,22 @@ def main():
         methods=["GET"],
     )
     router.add_api_route(
+        "/validate_input",
+        controller.validate_input_file,
+        response_model=InputValidationResponse,
+        methods=["POST"],
+    )
+    router.add_api_route(
         "/solve",
         controller.solve,
         response_model=SolveResponse,
         methods=["POST"],
+    )
+    router.add_api_route(
+        "/compare",
+        controller.compare_runs,
+        # response_model=RunReport,
+        methods=["GET"],
     )
 
     router.add_api_websocket_route("/ws", controller.websocket)

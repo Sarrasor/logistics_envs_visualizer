@@ -9,6 +9,9 @@ export default {
         "./node_modules/flowbite/**/*.js",
     ],
     theme: {
+        fontFamily: {
+            sans: ["Roboto", "Helvetica", "Arial", "sans-serif"],
+        },
         extend: {
             colors: {
                 "primary": {

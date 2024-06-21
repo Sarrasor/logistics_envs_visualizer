@@ -7,6 +7,7 @@ const router = createRouter({
         { path: '/live', name: "LiveMonitor", component: () => import("../views/LiveMonitor.vue"), },
         { path: '/solve', name: "Solve", component: () => import("../views/Solve.vue"), },
         { path: '/runs', name: "Runs", component: () => import("../views/Runs.vue"), },
+        { path: '/compare', name: "RunComparison", component: () => import("../views/RunComparison.vue"), },
         { path: '/runs/:id', name: "RunReport", props: true, component: () => import("../views/RunReport.vue"), },
         { path: '/:pathMatch(.*)*', name: "NotFound", component: () => import("../views/NotFound.vue"), },
     ]

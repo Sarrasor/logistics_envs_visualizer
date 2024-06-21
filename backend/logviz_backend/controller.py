@@ -7,13 +7,16 @@ import threading
 import uuid
 from typing import Annotated, Callable, Union
 
+from fastapi.responses import FileResponse
 import namesgenerator
 from fastapi import File, Form, HTTPException, WebSocket, WebSocketDisconnect
 
+from logviz_backend.input_validator import InputValidator
 from logviz_backend.runner import Runner
 from logviz_backend.schema import (
     Healthcheck,
     HealthcheckStatus,
+    InputValidationResponse,
     RenderRequest,
     RenderResponse,
     RenderStatus,
@@ -30,6 +33,24 @@ class LogvizController:
         self._runs_cache = {}
 
         self._runner = Runner()
+        self._input_validator = InputValidator()
+
+        self._metric_name_to_function = {
+            "Total reward": max,
+            "Number of workers": min,
+            "Total number of orders": min,
+            "Number of completed orders": max,
+            "Average time to assign": min,
+            "Average time to pickup": min,
+            "Average waiting time": min,
+            "Average trip duration": min,
+            "Assignment rate": max,
+            "Completion rate": max,
+            "Worker average idle rate": min,
+            "Worker average with order rate": max,
+            "Worker average traveled distance": min,
+            "Worker average service station visits": min,
+        }
 
         self._websockets: list[WebSocket] = []
 
@@ -56,6 +77,17 @@ class LogvizController:
 
     async def healthcheck(self) -> Healthcheck:
         return Healthcheck(status=HealthcheckStatus.UP)
+
+    async def get_example_input_file(self) -> FileResponse:
+        return FileResponse(
+            "server_data/ride_hailing/example.xlsx", filename="ride_hailing_example.xlsx"
+        )
+
+    async def validate_input_file(
+        self,
+        input_file: Annotated[bytes, File()],
+    ) -> InputValidationResponse:
+        return self._input_validator.validate(input_file)
 
     async def render(self, render_request: RenderRequest) -> RenderResponse:
         logger.info(
@@ -97,7 +129,7 @@ class LogvizController:
     def get_run_report(self, run_id: str) -> dict:
         logging.info(f"Request run id: '{run_id}'")
         if run_id not in self._runs_cache:
-            raise HTTPException(status_code=404, detail=f"Run with id {run_id} was not found")
+            raise HTTPException(status_code=404, detail=f"Run with id '{run_id}' was not found")
 
         run_folder = self._runs_folder / run_id
         run_report_path = run_folder / "run_report.json"
@@ -115,6 +147,7 @@ class LogvizController:
                 "end_time": None,
                 "orders": [],
                 "workers": [],
+                "service_stations": [],
                 "metrics": [],
             }
 
@@ -221,3 +254,132 @@ class LogvizController:
         with open(run_folder / "meta.json", "w") as file:
             json.dump(run_meta, file, indent=4)
         self._add_cache_entry(run_meta)
+
+    def compare_runs(self, ids: str) -> dict:
+        opacity = 0.75
+        run_ids = ids.split(",")
+        logging.info(f"Request to compare: {run_ids}")
+
+        column_names = ["Metric"]
+        metrics_data = {}
+        order_time_to_assign_data = []
+        waiting_times_data = []
+        order_trip_durations_data = []
+        for run_id in run_ids:
+            if run_id not in self._runs_cache:
+                raise HTTPException(status_code=404, detail=f"Run with id '{run_id}' was not found")
+
+            run_name = self._runs_cache[run_id]["name"]
+            column_names.append(run_name)
+
+            run_folder = pathlib.Path(self._runs_folder) / run_id
+            with open(run_folder / "run_report.json") as f:
+                run_report = json.load(f)
+
+            for metric in run_report["metrics"]:
+                if metric["name"] not in metrics_data:
+                    metrics_data[metric["name"]] = {
+                        "name": metric["name"],
+                        "unit": metric["unit"],
+                        "data": [],
+                    }
+
+                metrics_data[metric["name"]]["data"].append(
+                    {"value": metric["value"], "best": False}
+                )
+
+            order_time_to_assign = []
+            waiting_times = []
+            order_trip_durations = []
+            for order in run_report["orders"]:
+                if order["assignment_time"]:
+                    order_time_to_assign.append(order["assignment_time"] - order["creation_time"])
+
+                if order["pickup_start_time"] and order["creation_time"]:
+                    waiting_times.append(order["pickup_start_time"] - order["creation_time"])
+
+                if order["drop_off_start_time"] and order["pickup_end_time"]:
+                    order_trip_durations.append(
+                        order["drop_off_start_time"] - order["pickup_end_time"]
+                    )
+
+            order_time_to_assign_data.append(
+                {
+                    "x": order_time_to_assign,
+                    "name": run_name,
+                    "type": "histogram",
+                    "opacity": opacity,
+                }
+            )
+            waiting_times_data.append(
+                {"x": waiting_times, "name": run_name, "type": "histogram", "opacity": opacity}
+            )
+            order_trip_durations_data.append(
+                {
+                    "x": order_trip_durations,
+                    "name": run_name,
+                    "type": "histogram",
+                    "opacity": opacity,
+                }
+            )
+
+        rows = []
+        for metric in metrics_data.values():
+            metric_name = metric["name"]
+            best_value = self._metric_name_to_function[metric_name](
+                [d["value"] for d in metric["data"]]
+            )
+            for i in range(len(metric["data"])):
+                if metric["data"][i]["value"] == best_value:
+                    metric["data"][i]["best"] = True
+
+            rows.append(metric)
+
+        plots = []
+        plots.append(
+            {
+                "data": waiting_times_data,
+                "layout": self._get_layout("Waiting times", "Waiting time", "Number of orders"),
+            }
+        )
+        plots.append(
+            {
+                "data": order_time_to_assign_data,
+                "layout": self._get_layout(
+                    "Order time to assign", "Time to assign", "Number of orders"
+                ),
+            }
+        )
+        plots.append(
+            {
+                "data": order_trip_durations_data,
+                "layout": self._get_layout(
+                    "Order trip durations", "Trip duration", "Number of orders"
+                ),
+            }
+        )
+
+        response = {
+            "metrics_table": {
+                "column_names": column_names,
+                "rows": rows,
+            },
+            "plots": plots,
+        }
+
+        return response
+
+    def _get_layout(self, title: str, xlabel: str, ylabel: str):
+        return {
+            "barmode": "overlay",
+            "title": title,
+            "xaxis": {"title": xlabel},
+            "yaxis": {"title": ylabel},
+            "modebar": {"orientation": "v"},
+            "plot_bgcolor": "#FFFFFF",
+            "paper_bgcolor": "#FFFFFF",
+            "font": {
+                "color": "black",
+                "family": "Roboto",
+            },
+        }

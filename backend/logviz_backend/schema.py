@@ -190,3 +190,8 @@ class RunReport(BaseModel):
     workers: list[WorkerInfo]
     service_stations: list[ServiceStationInfo]
     metrics: list[Metric]
+
+
+class InputValidationResponse(BaseModel):
+    status: str
+    observation: Optional[Observation]
