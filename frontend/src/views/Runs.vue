@@ -20,15 +20,15 @@
             <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between">
                 <div>
                     <button id="dropdownRadioButton" data-dropdown-toggle="dropdownRadio"
-                        class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-2xl text-sm px-3 py-1.5 dark:bg-very-dark-gray-100 dark:text-white dark:border-gray-600 dark:hover:bg-very-dark-gray-50 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                        class="inline-flex items-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-2xl text-sm px-3 py-1.5 dark:bg-very-dark-gray-100 dark:text-white dark:border-gray-600 dark:hover:bg-very-dark-gray-50 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                         type="button">
-                        <svg class="w-3 h-3 text-primary-500 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        <svg class="w-4 h-4 text-primary-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                             fill="currentColor" viewBox="0 0 20 20">
                             <path
                                 d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
                         </svg>
-                        Last 7 days
-                        <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        <p class="min-w-32">{{ dateFilter }}</p>
+                        <svg class="w-2.5 h-2.5 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 10 6">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="m1 1 4 4 4-4" />
@@ -37,14 +37,15 @@
 
                     <!-- Dropdown menu -->
                     <div id="dropdownRadio"
-                        class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-2xl shadow dark:bg-gray-700 dark:divide-gray-600"
+                        class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-2xl shadow"
                         data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top"
                         style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate3d(522.5px, 3847.5px, 0px);">
                         <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
                             aria-labelledby="dropdownRadioButton">
                             <li>
                                 <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                    <input id="filter-radio-example-1" type="radio" value="" name="filter-radio"
+                                    <input @change="onDateFilter" checked id="filter-radio-example-1" type="radio"
+                                        value="Last day" name="filter-radio"
                                         class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="filter-radio-example-1"
                                         class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Last
@@ -53,8 +54,8 @@
                             </li>
                             <li>
                                 <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                    <input checked="" id="filter-radio-example-2" type="radio" value=""
-                                        name="filter-radio"
+                                    <input @change="onDateFilter" id="filter-radio-example-2" type="radio"
+                                        value="Last 7 days" name="filter-radio"
                                         class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="filter-radio-example-2"
                                         class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Last
@@ -63,7 +64,8 @@
                             </li>
                             <li>
                                 <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                    <input id="filter-radio-example-3" type="radio" value="" name="filter-radio"
+                                    <input @change="onDateFilter" id="filter-radio-example-3" type="radio"
+                                        value="Last 14 days" name="filter-radio"
                                         class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="filter-radio-example-3"
                                         class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Last
@@ -72,7 +74,8 @@
                             </li>
                             <li>
                                 <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                    <input id="filter-radio-example-4" type="radio" value="" name="filter-radio"
+                                    <input @change="onDateFilter" id="filter-radio-example-4" type="radio"
+                                        value="Last 30 days" name="filter-radio"
                                         class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="filter-radio-example-4"
                                         class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Last
@@ -81,7 +84,8 @@
                             </li>
                             <li>
                                 <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                    <input id="filter-radio-example-5" type="radio" value="" name="filter-radio"
+                                    <input @change="onDateFilter" id="filter-radio-example-5" type="radio"
+                                        value="Last 60 days" name="filter-radio"
                                         class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="filter-radio-example-5"
                                         class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Last
@@ -108,7 +112,7 @@
                                 clip-rule="evenodd"></path>
                         </svg>
                     </div>
-                    <input type="text" id="table-search"
+                    <input type="text" @input="onSearch" id="table-search"
                         class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-2xl w-80 bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-very-dark-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="Search run by name">
                 </div>
@@ -144,7 +148,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <RunThumbnailCard v-for="runThumbnail in runThumbnailList" :key="runThumbnail.id"
+                        <RunThumbnailCard v-for="runThumbnail in filteredThumbnails" :key="runThumbnail.id"
                             ref="thumbnailCards" :run-thumbnail="runThumbnail" />
                     </tbody>
                 </table>
@@ -154,7 +158,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue"
+import { ref, onMounted, computed } from "vue"
 import RunThumbnailCard from "../components/RunThumbnailCard.vue"
 import { initDropdowns } from "flowbite";
 import { useRouter } from "vue-router"
@@ -163,6 +167,8 @@ const runThumbnailList = ref([])
 const thumbnailCards = ref([])
 const isLoading = ref(true)
 const router = useRouter()
+const searchFilter = ref('')
+const dateFilter = ref('Last day')
 
 onMounted(async () => {
     const result = await fetch('/api/runs')
@@ -174,7 +180,38 @@ onMounted(async () => {
 
 function onCompareRuns() {
     const runIds = thumbnailCards.value.filter(card => card.getSelectedValue()).map(card => card.getId())
-    console.log(runIds)
     router.push({ name: 'RunComparison', query: { ids: runIds } })
+}
+
+const filteredThumbnails = computed(() => {
+    let filteredList = runThumbnailList.value
+    const secondsInDay = 24 * 60 * 60 * 1000
+    console.log(dateFilter.value)
+    if (dateFilter.value === 'Last day') {
+        console.log("Filtering last day")
+        filteredList = filteredList.filter(item => new Date(item.creation_time) > new Date(Date.now() - secondsInDay))
+    } else if (dateFilter.value === 'Last 7 days') {
+        filteredList = filteredList.filter(item => new Date(item.creation_time) > new Date(Date.now() - 7 * secondsInDay))
+    } else if (dateFilter.value === 'Last 14 days') {
+        filteredList = filteredList.filter(item => new Date(item.creation_time) > new Date(Date.now() - 14 * secondsInDay))
+    } else if (dateFilter.value === 'Last 30 days') {
+        filteredList = filteredList.filter(item => new Date(item.creation_time) > new Date(Date.now() - 30 * secondsInDay))
+    } else if (dateFilter.value === 'Last 60 days') {
+        filteredList = filteredList.filter(item => new Date(item.creation_time) > new Date(Date.now() - 60 * secondsInDay))
+    }
+
+    filteredList = filteredList.filter(item => item.name.toLowerCase().includes(searchFilter.value.toLowerCase()))
+
+    filteredList = filteredList.sort((a, b) => new Date(b.creation_time) - new Date(a.creation_time))
+
+    return filteredList
+})
+
+function onSearch(event) {
+    searchFilter.value = event.target.value
+}
+
+function onDateFilter(event) {
+    dateFilter.value = event.target.value
 }
 </script>
