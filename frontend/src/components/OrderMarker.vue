@@ -1,6 +1,6 @@
 <template>
-    <l-circle-marker v-if="order.status !== 'COMPLETED'" :lat-lng="getOrderLocationByStatus(order)" :radius="4"
-        :color="getOrderColorByStatus(order)" :stroke="false" :fillOpacity="0.8">
+    <l-circle-marker v-if="order.status !== 'COMPLETED'" :lat-lng="getOrderLocationByStatus(order)" :radius="5"
+        :color="getOrderColorByStatus(order)" :stroke="false" :fillOpacity="0.9">
         <l-popup :content="orderPopup(order)"></l-popup>
     </l-circle-marker>
 </template>
@@ -33,10 +33,10 @@ function getOrderLocationByStatus(order) {
 
 function getOrderColorByStatus(order) {
     if (order.status == "CREATED" || order.status == "ASSIGNED" || order.status == "IN_PICKUP") {
-        return "#0000ff"
+        return "#2563eb"
     }
     else {
-        return "#00ff00"
+        return "#16a34a"
     }
 }
 
